@@ -27,7 +27,7 @@ export PYPE_CONFIG_FOLDER=$(shell pwd)/.venv/.pype-cli
 export DISABLE_LOG_LEVEL=INFO
 
 # Process variables
-PY_FILES := setup.py claims tests
+PY_FILES := claims tests
 
 all: clean venv build
 
@@ -101,11 +101,11 @@ black-apply:
 
 lint: isort black
 	@echo Run code formatting checks against source code base
-	pipenv run flake8 claims tests
+	pipenv run flake8 $(PY_FILES)
 
 lint-apply: isort-apply black-apply
 	@echo Run code formatting checks against source code base
-	pipenv run flake8 claims tests
+	pipenv run flake8 $(PY_FILES)
 
 build: test mypy isort lint
 	@echo Run setup.py-based build process to package application
