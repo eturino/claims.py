@@ -6,30 +6,34 @@ ifeq (, $(shell which pipenv))
  $(error "No pipenv on PATH.")
 endif
 
-# Suppress warning if pipenv is started inside .venv
-export PIPENV_VERBOSITY = 1
+export PYTHON_VERSION=$(shell cat .python-version| tr -d "[:space:]")
+
+# shut up please
+export PIPENV_QUIET=1
+
 # Use relative .venv folder instead of home-folder based
-export PIPENV_VENV_IN_PROJECT = 1
+export PIPENV_VENV_IN_PROJECT=1
+
 # Ignore existing venvs
-export PIPENV_IGNORE_VIRTUALENVS = 1
+export PIPENV_IGNORE_VIRTUALENVS=1
+
 # Make sure we are running with an explicit encoding
-export LC_ALL = C
-export LANG = C.UTF-8
+export LC_ALL=en_GB.UTF-8
+export LANG=en_GB.UTF-8
+
 # Set configuration folder to venv
-export PYPE_CONFIG_FOLDER = $(shell pwd)/.venv/.pype-cli
+export PYPE_CONFIG_FOLDER=$(shell pwd)/.venv/.pype-cli
+
+export DISABLE_LOG_LEVEL=INFO
+
 # Process variables
-VERSION = $(shell python3 setup.py --version)
-PY_FILES := setup.py my_module tests
+PY_FILES := setup.py claims tests
 
 all: clean venv build
 
 venv: clean
 	@echo Initialize virtualenv, i.e., install required packages etc.
-	pipenv --three install --dev
-
-shell:
-	@echo Initialize virtualenv and open a new shell using it
-	pipenv shell
+	pipenv install --dev --python $(PYTHON_VERSION)
 
 clean:
 	@echo Clean project base
@@ -50,6 +54,21 @@ clean:
 	-name "Pipfile.lock" \
 	|xargs rm -rfv
 
+shell:
+	@echo Initialize virtualenv and open a new shell using it
+	pipenv shell
+
+outdated:
+	@echo Show outdated packages
+	pipenv update --outdated --dev --dry-run --bare
+
+update:
+	@echo Update all libs that can be updated
+	pipenv update
+
+graph:
+	@echo show the dependencies graph
+	pipenv graph
 
 test:
 	@echo Run all tests in default virtualenv
@@ -61,34 +80,48 @@ testall:
 
 isort:
 	@echo Check for incorrectly sorted imports
-	pipenv run isort --check-only $(PY_FILES)
+	pipenv run isort --profile black --check-only $(PY_FILES)
 
 isort-apply:
 	@echo Check for incorrectly sorted imports
-	pipenv run isort $(PY_FILES)
+	pipenv run isort --profile black $(PY_FILES)
 
 mypy:
 	@echo Run static code checks against source code base
-	pipenv run mypy my_module
+	pipenv run mypy claims
 	pipenv run mypy tests
 
-lint:
+black:
+	@echo Run black on src and complain about issues
+	pipenv run black $(PY_FILES) --check
+
+black-apply:
+	@echo Run black on src and fix any issues that it can
+	pipenv run black $(PY_FILES)
+
+lint: isort black
 	@echo Run code formatting checks against source code base
-	pipenv run flake8 my_module tests
+	pipenv run flake8 claims tests
+
+lint-apply: isort-apply black-apply
+	@echo Run code formatting checks against source code base
+	pipenv run flake8 claims tests
 
 build: test mypy isort lint
 	@echo Run setup.py-based build process to package application
 	pipenv run python setup.py bdist_wheel
 
+bump:
+	@echo Bump version and change CHANGELOG
+	npx standard-version
+
 publish: all
-	@echo Release to pypi.org and create git tag
+	@echo Release to pypi.org
 	pipenv run twine upload dist/*
-	git tag -a $(VERSION) -m "Version $(VERSION)"
-	git push --tags
 
 run:
-	@echo Execute my_module directly
-	pipenv run python -m my_module
+	@echo Execute claims directly
+	pipenv run python -m claims
 
 fetch-latest-boilerplate:
 	@echo Fetch latest python3-boilerplate version from github
