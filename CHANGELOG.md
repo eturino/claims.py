@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/eturino/claims.py/compare/v0.1.3...v0.1.4) (2022-02-25)
+
+
+### Features
+
+* export from main package ([47ee21f](https://github.com/eturino/claims.py/commit/47ee21fbde86641013210a65dda3ee2ca3f1a83a))
+
 ### [0.1.3](https://github.com/eturino/claims.py/compare/v0.1.2...v0.1.3) (2022-02-25)
 
 ### [0.1.2](https://github.com/eturino/claims.py/compare/v0.1.1...v0.1.2) (2022-02-16)
