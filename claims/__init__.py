@@ -4,7 +4,7 @@
 The __init__.py files are required to make Python treat directories
 containing the file as packages.
 """
-from .ability import build_ability, Ability
+from .ability import Ability, build_ability
 from .claim import Claim, build_claim
 from .claim_set import ClaimSet, build_claim_set
 from .errors import InvalidClaimError, InvalidClaimVerbError
