@@ -13,6 +13,7 @@ with open(
     long_description = f.read()
 
 setup(
+    zip_safe=False,
     # Basic project information
     name="claims",
     version='0.1.2',
@@ -40,6 +41,7 @@ setup(
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
     python_requires=">= 3.6",
+    package_data={"claims": ["py.typed"]},
     install_requires=[
         "attrs",
         "key_set",
