@@ -11,11 +11,13 @@ import __future__  # noqa: F401
 import json  # noqa: F401
 from os import path  # noqa: F401
 from re import IGNORECASE, sub  # noqa: F401
+from typing import List
 
 import key_set
 import pytest
 
 import claims  # noqa: F401
+from claims import Claim, build_claim
 from claims.ability import build_ability
 from claims.errors import InvalidClaimError, InvalidClaimVerbError
 
@@ -188,9 +190,11 @@ class TestAbility:  # noqa: D101
         assert isinstance(actual, key_set.KeySetAll)
 
     def test_access_to_resources_deep_none(self) -> None:  # noqa: D102, D103
-        ability = build_ability(
-            ["read:clients"], ["read:clients.my-client.projects.project"]
-        )
+        permitted: List[Claim] = [build_claim("read:clients")]
+        prohibited: List[Claim] = [
+            build_claim("read:clients.my-client.projects.project")
+        ]
+        ability = build_ability(permitted, prohibited)
         actual = ability.access_to_resources("read:clients.my-client.projects.project")
         assert isinstance(actual, key_set.KeySetNone)
 

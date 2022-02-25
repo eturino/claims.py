@@ -1,5 +1,5 @@
 """ClaimSet object, which represents a list of claims."""
-from typing import Callable, List, Optional, Set, Union
+from typing import Callable, List, Optional, Sequence, Set, Union
 
 from attr import define, field
 
@@ -52,7 +52,7 @@ class ClaimSet:
         return sorted(list(children_set))
 
 
-def build_claim_set(raw_list: List[Union[Claim, str, QueryTuple]]) -> ClaimSet:
+def build_claim_set(raw_list: Sequence[Union[Claim, str, QueryTuple]]) -> ClaimSet:
     """Given a list of raw claims and returns a ClaimSet with the parsed claims."""
     raw_set = set(raw_list)
     claims = [build_claim(x) for x in raw_set]

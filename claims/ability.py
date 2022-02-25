@@ -1,6 +1,6 @@
 """Ability object."""
 
-from typing import List, Union
+from typing import Sequence, Union
 
 import key_set
 from attr import define, field
@@ -53,8 +53,8 @@ class Ability:
 
 
 def build_ability(
-    permitted: List[Union[Claim, str, QueryTuple]],
-    prohibited: List[Union[Claim, str, QueryTuple]],
+    permitted: Sequence[Union[Claim, str, QueryTuple]],
+    prohibited: Sequence[Union[Claim, str, QueryTuple]],
 ) -> Ability:
     """Builds an Ability from the 2 lists of raw claims: permitted and prohibited."""
     permitted_claim_set = build_claim_set(permitted)
