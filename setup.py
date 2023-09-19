@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     # Basic project information
     name="claims",
-    version='0.1.6',
+    version='0.1.7',
     # Authorship and online reference
     author="Eduardo Turiño",
     author_email="eturino@eturino.com",

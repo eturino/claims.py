@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/eturino/claims.py/compare/v0.1.6...v0.1.7) (2023-09-19)
+
+
+### Features
+
+* allow more valid verbs ([515976e](https://github.com/eturino/claims.py/commit/515976ee07b592fe0359f9c08649ebe44146d8db))
+
 ### [0.1.6](https://github.com/eturino/claims.py/compare/v0.1.5...v0.1.6) (2022-02-25)
 
 
