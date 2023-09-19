@@ -29,4 +29,6 @@ Port of [`claims.ts`](https://github.com/eturino/claims.ts)
 - `claim.is_direct_child_of("read:stuff")`: `bool`
 - `claim.is_direct_descendant_of("read:stuff")`: `bool`
 
-TBD
+### Valid verbs
+
+"admin", "read", "delete", "create", "update", "manage"

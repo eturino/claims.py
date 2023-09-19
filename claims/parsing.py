@@ -39,4 +39,4 @@ def _check_and_build(verb: str, resource: Optional[str]) -> QueryTuple:
     return verb, resource
 
 
-ALLOWED_VERBS = ["admin", "read"]
+ALLOWED_VERBS = ["admin", "read", "delete", "create", "update", "manage"]

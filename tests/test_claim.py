@@ -37,22 +37,29 @@ class TestClaim:  # noqa: D101
         with pytest.raises(InvalidClaimVerbError):
             build_claim(raw)
 
-    @pytest.mark.parametrize("raw", ["admin:what", "admin:what.*"])
-    def test_admin_what(self, raw: str) -> None:  # noqa: D102, D103
-        actual = build_claim(raw)
-        assert isinstance(actual, Claim)
-        assert str(actual) == "admin:what"
-        assert actual.__str__() == "admin:what"
-        assert actual.__unicode__() == "admin:what"
-        assert actual.verb == "admin"
-        assert actual.resource == "what"
-        assert actual.has_verb("admin")
-        assert not actual.has_verb("other")
-        assert actual.has_resource("what")
-        assert not actual.has_resource("other")
-        assert not actual.has_resource("*")
-        assert not actual.has_resource(None)
-        assert not actual.is_global()
+    @pytest.mark.parametrize(
+        "valid_verb", ["admin", "read", "delete", "create", "update", "manage"]
+    )
+    def test_valid_verbs(self, valid_verb: str) -> None:  # noqa: D102, D103
+        cleaned = f"{valid_verb}:what"
+        actual_list = [
+            build_claim(f"{valid_verb}:what"),
+            build_claim(f"{valid_verb}:what.*"),
+        ]
+        for actual in actual_list:
+            assert isinstance(actual, Claim)
+            assert str(actual) == cleaned
+            assert actual.__str__() == cleaned
+            assert actual.__unicode__() == cleaned
+            assert actual.verb == valid_verb
+            assert actual.resource == "what"
+            assert actual.has_verb(valid_verb)
+            assert not actual.has_verb("other")
+            assert actual.has_resource("what")
+            assert not actual.has_resource("other")
+            assert not actual.has_resource("*")
+            assert not actual.has_resource(None)
+            assert not actual.is_global()
 
     def test_admin_global(self) -> None:  # noqa: D102, D103
         actual = build_claim("admin:*")
