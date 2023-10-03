@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/eturino/claims.py/compare/v0.1.7...v0.1.8) (2023-10-03)
+
+
+### Features
+
+* Claim, ClaimSet, and Ability are Pydantic v2 models ([0bb9b62](https://github.com/eturino/claims.py/commit/0bb9b62b95bba99973c07f204c0ab002c65ea93c))
+
 ### [0.1.7](https://github.com/eturino/claims.py/compare/v0.1.6...v0.1.7) (2023-09-19)
 
 
