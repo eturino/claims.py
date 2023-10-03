@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/eturino/claims.py/compare/v0.1.8...v0.1.9) (2023-10-03)
+
+
+### Features
+
+* deal with pydantic warning ([0cdf899](https://github.com/eturino/claims.py/commit/0cdf899a0c3ea7bfe91fac5f621e7edcc3cb0d4b))
+
+
+### Bug Fixes
+
+* claim.parts_from_resource using [@cached](https://github.com/cached)_property ([028463c](https://github.com/eturino/claims.py/commit/028463c4657575031c9a148384094f633b4d6dc3))
+
 ### [0.1.8](https://github.com/eturino/claims.py/compare/v0.1.7...v0.1.8) (2023-10-03)
 
 
