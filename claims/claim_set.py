@@ -1,17 +1,30 @@
 """ClaimSet object, which represents a list of claims."""
-from typing import Callable, List, Optional, Sequence, Set, Union
+from typing import Any, Callable, List, Optional, Sequence, Set, Union
 
-from attr import define, field
+from pydantic import BaseModel, Field, model_validator
 
 from claims.claim import Claim, build_claim
 from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
 
 
-@define(frozen=True, eq=True, repr=True, init=True)
-class ClaimSet:
+class ClaimSet(BaseModel):
     """Models a list of claims"""
 
-    claims: List[Claim] = field()
+    claims: List[Claim] = Field(default_factory=list, frozen=True)
+
+    class Config:
+        """Freezes the object. (Pydantic config)"""
+
+        frozen = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def parse_claims(cls, data: Any) -> Any:
+        """Parses the claims from the data, if it is a dict."""
+        if isinstance(data, dict):
+            assert "claims" in data, "claims should be included"
+            data["claims"] = build_claim_list(data["claims"])
+        return data
 
     def check(self, query: RawQuery) -> bool:
         """Returns True if any of the claims checks for the given query."""
@@ -52,9 +65,19 @@ class ClaimSet:
         return sorted(list(children_set))
 
 
-def build_claim_set(raw_list: Sequence[Union[Claim, str, QueryTuple]]) -> ClaimSet:
+def build_claim_set(
+    raw_list: ClaimSet | Sequence[Union[Claim, str, QueryTuple]]
+) -> ClaimSet:
     """Given a list of raw claims and returns a ClaimSet with the parsed claims."""
+    if isinstance(raw_list, ClaimSet):
+        return raw_list
+
+    return ClaimSet(claims=build_claim_list(raw_list))
+
+
+def build_claim_list(raw_list: Sequence[Union[Claim, str, QueryTuple]]) -> List[Claim]:
+    """Given a list of raw claims and returns a list of parsed claims."""
     raw_set = set(raw_list)
     claims = [build_claim(x) for x in raw_set]
 
-    return ClaimSet(claims=sorted(claims))
+    return sorted(claims)

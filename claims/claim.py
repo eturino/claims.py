@@ -1,23 +1,26 @@
 """Claim object."""
-from typing import Any, List, Optional, Union
+from typing import Annotated, Any, List, Optional, Union
 
-from attr import define, field
+from pydantic import BaseModel, Field, computed_field
 
 from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
 
 
-@define(frozen=True, eq=True, repr=True, init=True)
-class Claim:
+class Claim(BaseModel):
     """Models a single claim: `verb:resource` or `verb:*`."""
 
-    verb: str = field(order=True)
-    resource: Optional[str] = field(order=True)
+    verb: Annotated[str, Field(frozen=True)]
+    resource: Annotated[Optional[str], Field(frozen=True)]
 
-    parts_from_resource: List[str] = field(init=False, hash=False)
+    class Config:
+        """Freezes the object. (Pydantic config)"""
 
-    def __attrs_post_init__(self) -> None:
-        """Splits the resource in parts, to be used in lookups."""
-        object.__setattr__(self, "parts_from_resource", _extract_parts(self.resource))
+        frozen = True
+
+    @computed_field(repr=False)
+    def parts_from_resource(self) -> list[str]:
+        """Returns the parts of the resource, split by '.'"""
+        return _extract_parts(self.resource)
 
     def __lt__(self, other: Any) -> bool:
         """Compares based first on verb, then on resource (not Claims first)."""

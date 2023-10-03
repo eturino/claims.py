@@ -3,19 +3,23 @@
 from typing import Sequence, Union
 
 import key_set
-from attr import define, field
+from pydantic import BaseModel, Field
 
 from claims.claim import Claim
 from claims.claim_set import ClaimSet, build_claim_set
 from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
 
 
-@define(frozen=True, eq=True, repr=True, init=True)
-class Ability:
+class Ability(BaseModel):
     """Models an ability with permitted and prohibited claims"""
 
-    permitted: ClaimSet = field()
-    prohibited: ClaimSet = field()
+    permitted: ClaimSet = Field(frozen=True)
+    prohibited: ClaimSet = Field(frozen=True)
+
+    class Config:
+        """Freezes the object. (Pydantic config)"""
+
+        frozen = True
 
     def can(self, query: RawQuery) -> bool:
         """Returns true if a permitted claim checks, and no prohibited claim check."""

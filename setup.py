@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     # Basic project information
     name="claims",
-    version='0.1.7',
+    version="0.1.7",
     # Authorship and online reference
     author="Eduardo Turiño",
     author_email="eturino@eturino.com",
@@ -43,7 +43,7 @@ setup(
     python_requires=">= 3.6",
     package_data={"claims": ["py.typed"]},
     install_requires=[
-        "attrs",
+        "pydantic>=2.4,<3",
         "key_set",
     ],
     # Licensing and copyright
