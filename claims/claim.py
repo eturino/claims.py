@@ -13,10 +13,7 @@ class Claim(BaseModel):
     verb: Annotated[str, Field(frozen=True)]
     resource: Annotated[Optional[str], Field(frozen=True)]
 
-    class Config:
-        """Freezes the object. (Pydantic config)"""
-
-        frozen = True
+    model_config = {"frozen": True}
 
     @cached_property
     def parts_from_resource(self) -> list[str]:

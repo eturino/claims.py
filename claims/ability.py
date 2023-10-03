@@ -16,10 +16,7 @@ class Ability(BaseModel):
     permitted: ClaimSet = Field(frozen=True)
     prohibited: ClaimSet = Field(frozen=True)
 
-    class Config:
-        """Freezes the object. (Pydantic config)"""
-
-        frozen = True
+    model_config = {"frozen": True}
 
     def can(self, query: RawQuery) -> bool:
         """Returns true if a permitted claim checks, and no prohibited claim check."""

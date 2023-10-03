@@ -12,10 +12,7 @@ class ClaimSet(BaseModel):
 
     claims: List[Claim] = Field(default_factory=list, frozen=True)
 
-    class Config:
-        """Freezes the object. (Pydantic config)"""
-
-        frozen = True
+    model_config = {"frozen": True}
 
     @model_validator(mode="before")
     @classmethod
