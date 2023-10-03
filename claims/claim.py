@@ -1,7 +1,8 @@
 """Claim object."""
+from functools import cached_property
 from typing import Annotated, Any, List, Optional, Union
 
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field
 
 from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
 
@@ -17,7 +18,7 @@ class Claim(BaseModel):
 
         frozen = True
 
-    @computed_field(repr=False)
+    @cached_property
     def parts_from_resource(self) -> list[str]:
         """Returns the parts of the resource, split by '.'"""
         return _extract_parts(self.resource)
