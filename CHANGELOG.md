@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/eturino/claims.py/compare/v0.1.11...v0.2.0) (2023-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **Claim:** Claim#parts_from_resource is removed.
+
+### Bug Fixes
+
+* **Claim:** remove `claim.parts_from_resource` ([f48b9c9](https://github.com/eturino/claims.py/commit/f48b9c9a764f89a0b059d54e4c20f06c2e585a57))
+
 ### [0.1.11](https://github.com/eturino/claims.py/compare/v0.1.10...v0.1.11) (2023-10-09)
 
 
