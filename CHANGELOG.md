@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/eturino/claims.py/compare/v0.2.0...v0.2.1) (2023-10-09)
+
+
+### Features
+
+* **ClaimSet:** adding computed_field `claims_strings` that returns a list with the string representation of each claim ([635e013](https://github.com/eturino/claims.py/commit/635e01307467a38d62667c2c9e97702a7d77eb8f))
+
 ## [0.2.0](https://github.com/eturino/claims.py/compare/v0.1.11...v0.2.0) (2023-10-09)
 
 
