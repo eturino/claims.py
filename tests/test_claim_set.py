@@ -116,3 +116,24 @@ class TestClaimSet:  # noqa: D101
         actual = build_claim_set([c1, c2, c3, c4, c5])
 
         assert actual.direct_descendants_of("admin:*") == ["amber", "valid"]
+
+    def test_add_if_not_checked(self) -> None:  # noqa: D102, D103
+        c1 = build_claim("read:*")
+        c2 = build_claim("admin:valid")
+        c3 = build_claim("admin:valid.other")
+        c4 = build_claim("admin:valid.another")
+        c5 = build_claim("admin:amber")
+        claim_set = build_claim_set([c1, c2, c3, c4, c5])
+
+        assert claim_set.add_if_not_checked("admin:valid") is claim_set
+        assert claim_set.add_if_not_checked("read:something") is claim_set
+
+        new_claim_str = "admin:other_stuff"
+        new_claim = build_claim(new_claim_str)
+        other = claim_set.add_if_not_checked(new_claim_str)
+        expected_claims = build_claim_set([c1, c2, c3, c4, c5, new_claim]).claims
+        assert other is not claim_set
+        assert other.check(new_claim_str)
+        for idx, a in enumerate(other.claims):
+            b = expected_claims[idx]
+            assert a == b

@@ -1,9 +1,9 @@
 # Required executables
 ifeq (, $(shell which python3))
- $(error "No python3 on PATH.")
+	$(error "No python3 on PATH.")
 endif
 ifeq (, $(shell which pipenv))
- $(error "No pipenv on PATH.")
+	$(error "No pipenv on PATH.")
 endif
 
 export PYTHON_VERSION=$(shell cat .python-version| tr -d "[:space:]")

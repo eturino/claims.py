@@ -31,6 +31,16 @@ class ClaimSet(BaseModel):
                 return True
         return False
 
+    def add_if_not_checked(self, query: RawQuery) -> "ClaimSet":
+        """If the query is checked, returns self. Otherwise, it returns a new Claim with this query added."""
+        if self.check(query):
+            return self
+
+        claims = self.claims.copy()
+        claims.append(build_claim(query))
+        sorted_claims = sorted(claims)
+        return ClaimSet(claims=sorted_claims)
+
     def direct_children_of(self, query: RawQuery) -> List[str]:
         """
         Collects from the claims of the set the result of `direct_child_of()`.
