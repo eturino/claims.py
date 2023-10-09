@@ -287,12 +287,6 @@ class TestClaim:  # noqa: D101
         with pytest.raises(InvalidClaimVerbError):
             claim.is_direct_descendant_of(query)
 
-    def test_parts_from_resource_same_instance(self) -> None:  # noqa: D102, D103
-        claim = Claim(verb="read", resource="what.some.stuff")
-        parts_from_resource_first_call = claim.parts_from_resource
-        parts_from_resource_second_call = claim.parts_from_resource
-        assert parts_from_resource_first_call is parts_from_resource_second_call
-
 
 def _assert_not_child(claim: Claim, query: str) -> None:
     assert claim.direct_child_of(query) is None

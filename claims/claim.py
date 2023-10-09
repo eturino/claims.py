@@ -1,5 +1,4 @@
 """Claim object."""
-from functools import cached_property
 from typing import Annotated, Any, List, Optional, Union
 
 from pydantic import BaseModel, Field
@@ -14,11 +13,6 @@ class Claim(BaseModel):
     resource: Annotated[Optional[str], Field(frozen=True)]
 
     model_config = {"frozen": True}
-
-    @cached_property
-    def parts_from_resource(self) -> list[str]:
-        """Returns the parts of the resource, split by '.'"""
-        return _extract_parts(self.resource)
 
     def __lt__(self, other: Any) -> bool:
         """Compares based first on verb, then on resource (not Claims first)."""
@@ -112,12 +106,13 @@ class Claim(BaseModel):
         if self.resource is None or not self.has_verb(verb):
             return None
 
+        my_parts = _extract_parts(self.resource)
         resource_parts = _extract_parts(resource)
-        if len(self.parts_from_resource) != (len(resource_parts) + 1):
+        if len(my_parts) != (len(resource_parts) + 1):
             return None
 
         if resource is None:
-            return self.parts_from_resource[0]
+            return my_parts[0]
 
         if not self.resource.startswith(f"{resource}."):
             return None
@@ -158,15 +153,17 @@ class Claim(BaseModel):
         if self.resource is None or not self.has_verb(verb):
             return None
 
+        my_parts = _extract_parts(self.resource)
+
         if resource is None:
-            return self.parts_from_resource[0]
+            return my_parts[0]
 
         if not self.resource.startswith(f"{resource}."):
             return None
 
         resource_parts = _extract_parts(resource)
         idx = len(resource_parts)
-        return self.parts_from_resource[idx]
+        return my_parts[idx]
 
     def is_direct_descendant_of(self, query: RawQuery) -> bool:
         """
