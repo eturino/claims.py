@@ -21,6 +21,7 @@ flake8-isort = "*" # flake8-ext to show isort issues
 pep8-naming = "*" # flake8-ext to enforce pep8 naming conventions
 isort = "*" # Automated import sorting
 pytest = "*" # Python base-testing library
+pytest-cov = "*" # Python base-testing library
 tox = "*" # Automated and standardized testing in Python
 rope = "*" # Refactoring library
 twine = "*" # Interoperability with pypi.org

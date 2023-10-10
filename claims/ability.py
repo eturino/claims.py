@@ -52,6 +52,52 @@ class Ability(BaseModel):
         )
         return allowed.difference(forbidden)
 
+    def with_extra_permitted_if_not_checked(
+        self, queries: Sequence[RawQuery]
+    ) -> "Ability":
+        """Returns a copy of this ability with the given extra permitted claims, ignoring already checked"""
+        return Ability(
+            permitted=self.permitted.add_if_not_checked_list(queries),
+            prohibited=self.prohibited,
+        )
+
+    def with_extra_prohibited_if_not_checked(
+        self, queries: Sequence[RawQuery]
+    ) -> "Ability":
+        """Returns a copy of this ability with the given extra prohibited claims, ignoring already checked"""
+        return Ability(
+            permitted=self.permitted,
+            prohibited=self.prohibited.add_if_not_checked_list(queries),
+        )
+
+    def without_exact_permitted_list(self, queries: Sequence[RawQuery]) -> "Ability":
+        """Returns a copy of this ability with the same prohibited and removing all the exact permitted given"""
+        return Ability(
+            permitted=self.permitted.without_exact_list(queries),
+            prohibited=self.prohibited,
+        )
+
+    def without_exact_prohibited_list(self, queries: Sequence[RawQuery]) -> "Ability":
+        """Returns a copy of this ability with the same permitted and removing all the exact prohibited given"""
+        return Ability(
+            permitted=self.permitted,
+            prohibited=self.prohibited.without_exact_list(queries),
+        )
+
+    def without_exact_permitted(self, query: RawQuery) -> "Ability":
+        """Returns a copy of this ability with the same prohibited and removing the exact permitted given"""
+        return Ability(
+            permitted=self.permitted.without_exact(query),
+            prohibited=self.prohibited,
+        )
+
+    def without_exact_prohibited(self, query: RawQuery) -> "Ability":
+        """Returns a copy of this ability with the same permitted and removing the exact prohibited given"""
+        return Ability(
+            permitted=self.permitted,
+            prohibited=self.prohibited.without_exact(query),
+        )
+
 
 def build_ability(
     permitted: Sequence[Union[Claim, str, QueryTuple]],

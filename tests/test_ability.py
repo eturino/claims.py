@@ -17,7 +17,7 @@ import key_set
 import pytest
 
 import claims  # noqa: F401
-from claims import Claim, build_claim
+from claims import Claim, build_claim, build_claim_set
 from claims.ability import build_ability
 from claims.errors import InvalidClaimError, InvalidClaimVerbError
 
@@ -226,3 +226,137 @@ class TestAbility:  # noqa: D101
         actual = ability.access_to_resources("read:clients.my-client.projects.project")
         assert isinstance(actual, key_set.KeySetSome)
         assert actual.elements() == {"one-project"}
+
+    def test_with_extra_permitted_if_not_checked(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            [
+                "read:clients.my-client.projects.project.one-project",
+                "read:clients.my-client.projects.project.bad-project",
+            ],
+            [
+                "read:clients.my-client.projects.project.one-project.people",
+                "read:clients.my-client.projects.project.bad-project",
+            ],
+        )
+        actual = ability.with_extra_permitted_if_not_checked(
+            [
+                "read:clients.my-client.projects.project.one-project.nested",
+                "read:clients.my-client.projects.project.one-project",
+                "read:clients.other-stuff",
+            ]
+        )
+        assert actual.prohibited == ability.prohibited
+        assert actual.permitted == build_claim_set(
+            [
+                "read:clients.my-client.projects.project.one-project",
+                "read:clients.my-client.projects.project.bad-project",
+                "read:clients.other-stuff",
+            ]
+        )
+
+    def test_with_extra_prohibited_if_not_checked(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            [
+                "read:clients.my-client.projects.project.one-project",
+                "read:clients.my-client.projects.project.bad-project",
+            ],
+            [
+                "read:clients.my-client.projects.project.one-project.people",
+                "read:clients.my-client.projects.project.bad-project",
+            ],
+        )
+        actual = ability.with_extra_prohibited_if_not_checked(
+            [
+                "read:clients.my-client.projects.project.one-project.people.nested",
+                "read:clients.my-client.projects.project.one-project.people",
+                "read:clients.other-stuff",
+            ]
+        )
+        assert actual.permitted == ability.permitted
+        assert actual.prohibited == build_claim_set(
+            [
+                "read:clients.my-client.projects.project.one-project.people",
+                "read:clients.my-client.projects.project.bad-project",
+                "read:clients.other-stuff",
+            ]
+        )
+
+    def test_without_exact_permitted_list(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            permitted=[
+                "read:clients.blah",
+                "read:clients.blah.blah",
+                "read:stuff",
+                "read:others",
+            ],
+            prohibited=["read:whatever"],
+        )
+        actual = ability.without_exact_permitted_list(
+            ["read:clients.blah", "read:stuff"]
+        )
+        assert actual.prohibited == ability.prohibited
+        assert actual.permitted == build_claim_set(
+            ["read:clients.blah.blah", "read:others"]
+        )
+
+        actual2 = ability.without_exact_permitted_list(["admin:nope", "admin:nah"])
+        assert actual2 == ability
+
+    def test_without_exact_prohibited_list(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            prohibited=[
+                "read:clients.blah",
+                "read:clients.blah.blah",
+                "read:stuff",
+                "read:others",
+            ],
+            permitted=["read:whatever"],
+        )
+        actual = ability.without_exact_prohibited_list(
+            ["read:clients.blah", "read:stuff"]
+        )
+        assert actual.permitted == ability.permitted
+        assert actual.prohibited == build_claim_set(
+            ["read:clients.blah.blah", "read:others"]
+        )
+
+        actual2 = ability.without_exact_prohibited_list(["admin:nope", "admin:nah"])
+        assert actual2 == ability
+
+    def test_without_exact_permitted(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            permitted=[
+                "read:clients.blah",
+                "read:clients.blah.blah",
+                "read:stuff",
+                "read:others",
+            ],
+            prohibited=["read:whatever"],
+        )
+        actual = ability.without_exact_permitted("read:clients.blah")
+        assert actual.prohibited == ability.prohibited
+        assert actual.permitted == build_claim_set(
+            ["read:clients.blah.blah", "read:stuff", "read:others"]
+        )
+
+        actual2 = ability.without_exact_permitted("admin:nope")
+        assert actual2 == ability
+
+    def test_without_exact_prohibited(self) -> None:  # noqa: D102, D103
+        ability = build_ability(
+            prohibited=[
+                "read:clients.blah",
+                "read:clients.blah.blah",
+                "read:stuff",
+                "read:others",
+            ],
+            permitted=["read:whatever"],
+        )
+        actual = ability.without_exact_prohibited("read:clients.blah")
+        assert actual.permitted == ability.permitted
+        assert actual.prohibited == build_claim_set(
+            ["read:clients.blah.blah", "read:stuff", "read:others"]
+        )
+
+        actual2 = ability.without_exact_prohibited("admin:nope")
+        assert actual2 == ability

@@ -46,6 +46,42 @@ class ClaimSet(BaseModel):
         sorted_claims = sorted(claims)
         return ClaimSet(claims=sorted_claims)
 
+    def add_if_not_checked_list(self, queries: Sequence[RawQuery]) -> "ClaimSet":
+        """same as `add_if_not_checked` but for a list of queries. They are checked before anyone is added."""
+        valid_queries = [q for q in queries if not self.check(q)]
+        if len(valid_queries) == 0:
+            return self
+
+        claims = self.claims.copy()
+        for query in valid_queries:
+            claims.append(build_claim(query))
+        sorted_claims = sorted(claims)
+        return ClaimSet(claims=sorted_claims)
+
+    def has_exact(self, query: RawQuery) -> bool:
+        """Returns True if the query is checked in the claims."""
+        return any(c.is_exact(query) for c in self.claims)
+
+    def without_exact(self, query: RawQuery) -> "ClaimSet":
+        """Returns a new ClaimSet removing any claim that is_exact to the given query."""
+        if not self.has_exact(query):
+            return self
+
+        claims = [c for c in self.claims if not c.is_exact(query)]
+        return ClaimSet(claims=claims)
+
+    def without_exact_list(self, queries: Sequence[RawQuery]) -> "ClaimSet":
+        """Returns a new ClaimSet removing any claim that is_exact to any of the given queries."""
+
+        # convert to tuples once, to avoid doing it multiple times in the next loop
+        tuples = [extract_verb_resource(q) for q in queries]
+        surviving_claims = [
+            c for c in self.claims if not any(c.is_exact(q) for q in tuples)
+        ]
+        if len(surviving_claims) == len(self.claims):
+            return self
+        return ClaimSet(claims=surviving_claims)
+
     def direct_children_of(self, query: RawQuery) -> List[str]:
         """
         Collects from the claims of the set the result of `direct_child_of()`.

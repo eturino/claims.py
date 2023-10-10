@@ -43,6 +43,8 @@ clean:
 	-name ".ropeproject" -o \
 	-name ".mypy_cache" -o \
 	-name ".pytest_cache" -o \
+	-name ".coverage" -o \
+	-name "coverage_re" -o \
 	-name "__pycache__" -o \
 	-iname "*.egg-info" -o \
 	-name "build" -o \
@@ -72,7 +74,11 @@ graph:
 
 test:
 	@echo Run all tests in default virtualenv
-	pipenv run py.test tests
+	pipenv run pytest tests
+
+test-cov-html:
+	@echo Run all tests in default virtualenv
+	pipenv run pytest tests --cov --cov-report=html:coverage_re
 
 testall:
 	@echo Run all tests against all virtualenvs defined in tox.ini

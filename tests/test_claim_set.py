@@ -57,6 +57,11 @@ class TestClaimSet:  # noqa: D101
             cs = build_claim_set(["read:valid"])
             cs.check(raw)
 
+    def test_build_with_already_built(self) -> None:  # noqa: D102, D103
+        claim_set = build_claim_set(["admin:*", "read:valid", "admin:*"])
+        actual = build_claim_set(claim_set)
+        assert actual is claim_set
+
     def test_build_uniq_sort(self) -> None:  # noqa: D102, D103
         actual = build_claim_set(["admin:*", "read:valid", "admin:*"])
         claim_admin = build_claim("admin:*")
@@ -141,3 +146,25 @@ class TestClaimSet:  # noqa: D101
         for idx, a in enumerate(other.claims):
             b = expected_claims[idx]
             assert a == b
+
+    def test_add_if_not_checked_list(self) -> None:  # noqa: D102, D103
+        c1 = build_claim("read:*")
+        c2 = build_claim("admin:valid")
+        c3 = build_claim("admin:valid.other")
+        c4 = build_claim("admin:valid.another")
+        c5 = build_claim("admin:amber")
+        claim_set = build_claim_set([c1, c2, c3, c4, c5])
+
+        assert (
+            claim_set.add_if_not_checked_list(["admin:valid", "read:something"])
+            is claim_set
+        )
+
+        actual = claim_set.add_if_not_checked_list(
+            ["admin:valid", "read:something", "admin:other_stuff"]
+        )
+        expected_claims = build_claim_set(
+            [c1, c2, c3, c4, c5, build_claim("admin:other_stuff")]
+        ).claims
+        assert actual is not claim_set
+        assert actual.claims == expected_claims

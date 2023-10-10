@@ -61,6 +61,14 @@ class TestClaim:  # noqa: D101
             assert not actual.has_resource(None)
             assert not actual.is_global()
 
+    def test_le_lt_gt_ge(self) -> None:  # noqa: D102, D103
+        c1 = build_claim("admin:*")
+        c2 = build_claim("admin:something")
+        assert c1 < c2
+        assert c1 <= c2
+        assert c2 > c1
+        assert c2 >= c1
+
     def test_admin_global(self) -> None:  # noqa: D102, D103
         actual = build_claim("admin:*")
         assert isinstance(actual, Claim)
@@ -81,11 +89,13 @@ class TestClaim:  # noqa: D101
         c1 = build_claim("admin:*")
         c2 = build_claim("admin:*")
         assert c1 == c2
+        assert c1 != 2  # not equal to something that is not a claim
 
     def test_lt(self) -> None:  # noqa: D102, D103
         c1 = build_claim("admin:*")
         c2 = build_claim("admin:something")
         assert c1 < c2
+        assert c1 < 3  # goes before something that is not a claim
 
     @pytest.mark.parametrize(
         "query", ["", "oiasjdoaiejfa.aoeifjao", "read:stuffOIAJFEA!#!#!"]
@@ -146,6 +156,17 @@ class TestClaim:  # noqa: D101
         assert not claim.is_exact("read:something.else")
         assert not claim.is_exact("admin:*")
         assert not claim.is_exact("admin:something")
+
+    def test_direct_child_of_edge_cases(self) -> None:  # noqa: D102, D103
+        claim = build_claim("read:something")
+        assert claim.direct_child_of("read:another") is None
+        assert claim.direct_child_of("read:another.stuff") is None
+
+        claim2 = build_claim("read:something.else")
+        assert claim2.direct_child_of("read:something.else") is None
+        assert claim2.direct_child_of("read:another") is None
+        assert claim2.direct_child_of("read:another.else") is None
+        assert claim2.direct_child_of("read:another.stuff") is None
 
     def test_claim_read_global_direct_child_of(self) -> None:  # noqa: D102, D103
         claim = build_claim("read:*")
