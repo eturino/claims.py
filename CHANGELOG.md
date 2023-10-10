@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/eturino/claims.py/compare/v0.2.1...v0.2.2) (2023-10-10)
+
+
+### Features
+
+* adding QoL methods to Ability, ClaimSet, and Claim ([c2a4dc2](https://github.com/eturino/claims.py/commit/c2a4dc2d55284c0f4ced90fd5e4d5fcb2b2a5bf9))
+
 ### [0.2.1](https://github.com/eturino/claims.py/compare/v0.2.0...v0.2.1) (2023-10-09)
 
 
