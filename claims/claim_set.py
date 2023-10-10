@@ -47,7 +47,7 @@ class ClaimSet(BaseModel):
         return ClaimSet(claims=sorted_claims)
 
     def add_if_not_checked_list(self, queries: Sequence[RawQuery]) -> "ClaimSet":
-        """same as `add_if_not_checked` but for a list of queries. They are checked before anyone is added."""
+        """Same as `add_if_not_checked` but for a list of queries. They are checked before anyone is added."""
         valid_queries = [q for q in queries if not self.check(q)]
         if len(valid_queries) == 0:
             return self
@@ -72,7 +72,6 @@ class ClaimSet(BaseModel):
 
     def without_exact_list(self, queries: Sequence[RawQuery]) -> "ClaimSet":
         """Returns a new ClaimSet removing any claim that is_exact to any of the given queries."""
-
         # convert to tuples once, to avoid doing it multiple times in the next loop
         tuples = [extract_verb_resource(q) for q in queries]
         surviving_claims = [
