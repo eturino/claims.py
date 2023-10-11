@@ -1,7 +1,7 @@
 """ClaimSet object, which represents a list of claims."""
 from typing import Any, Callable, List, Optional, Sequence, Set, Union
 
-from pydantic import BaseModel, Field, computed_field, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from claims.claim import Claim, build_claim
 from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
@@ -23,7 +23,6 @@ class ClaimSet(BaseModel):
             data["claims"] = build_claim_list(data["claims"])
         return data
 
-    @computed_field
     def claims_strings(self) -> list[str]:
         """Returns a list of strings representing the claims."""
         return [str(x) for x in self.claims]

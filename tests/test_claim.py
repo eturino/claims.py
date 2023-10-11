@@ -15,8 +15,10 @@ from re import IGNORECASE, sub  # noqa: F401
 import pytest
 
 import claims  # noqa: F401
+from claims import InvalidClaimResourceError
 from claims.claim import Claim, build_claim
 from claims.errors import InvalidClaimError, InvalidClaimVerbError
+from claims.parsing import RawQuery
 
 
 class TestClaim:  # noqa: D101
@@ -26,6 +28,7 @@ class TestClaim:  # noqa: D101
             "",  # empty string
             "whatever.stuff",  # no verb
             "read:stuffOIAJFEA!#!#!",  # bad chars
+            {"resource": "stuff"},  # missing verb
         ],
     )
     def test_build_errors_bad_raw(self, raw: str) -> None:  # noqa: D102, D103
@@ -36,6 +39,46 @@ class TestClaim:  # noqa: D101
     def test_build_error_invalid_verb(self, raw: str) -> None:  # noqa: D102, D103
         with pytest.raises(InvalidClaimVerbError):
             build_claim(raw)
+
+    @pytest.mark.parametrize(
+        "raw",
+        [
+            ("admin", 3),
+            {"verb": "admin", "resource": 3},
+            {"verb": "read", "resource": "stuffOIAJFEA!#!#!"},  # bad chars
+        ],
+    )
+    def test_build_error_invalid_resource(self, raw: str) -> None:  # noqa: D102, D103
+        with pytest.raises(InvalidClaimResourceError):
+            build_claim(raw)
+
+    @pytest.mark.parametrize(
+        "raw",
+        [
+            "admin:*",
+            ("admin", None),
+            {"verb": "admin", "resource": None},
+            Claim(verb="admin", resource=None),
+        ],
+    )
+    def test_build_valids(self, raw: RawQuery) -> None:
+        """Test valid claims without resource"""
+        actual = build_claim(raw)
+        assert actual == Claim(verb="admin", resource=None)
+
+    @pytest.mark.parametrize(
+        "raw",
+        [
+            "admin:something.else",
+            ("admin", "something.else"),
+            {"verb": "admin", "resource": "something.else"},
+            Claim(verb="admin", resource="something.else"),
+        ],
+    )
+    def test_build_valids_with_resource(self, raw: RawQuery) -> None:
+        """Test valid claims with resource"""
+        actual = build_claim(raw)
+        assert actual == Claim(verb="admin", resource="something.else")
 
     @pytest.mark.parametrize(
         "valid_verb", ["admin", "read", "delete", "create", "update", "manage"]

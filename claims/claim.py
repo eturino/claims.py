@@ -3,7 +3,7 @@ from typing import Annotated, Any, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from claims.parsing import QueryTuple, RawQuery, extract_verb_resource
+from claims.parsing import ClaimDict, QueryTuple, RawQuery, extract_verb_resource
 
 
 class Claim(BaseModel):
@@ -182,7 +182,7 @@ class Claim(BaseModel):
         return self.direct_descendant_of(query) is not None
 
 
-def build_claim(raw: Union[Claim, str, QueryTuple]) -> Claim:
+def build_claim(raw: Union[Claim, str, QueryTuple, ClaimDict]) -> Claim:
     """Parses the raw string and builds a claim with it."""
     if isinstance(raw, Claim):
         return raw

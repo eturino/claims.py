@@ -7,8 +7,8 @@ containing the file as packages.
 from .ability import Ability, build_ability
 from .claim import Claim, build_claim
 from .claim_set import ClaimSet, build_claim_set
-from .errors import InvalidClaimError, InvalidClaimVerbError
-from .parsing import QueryTuple, extract_verb_resource
+from .errors import InvalidClaimError, InvalidClaimResourceError, InvalidClaimVerbError
+from .parsing import QueryTuple, RawQuery, extract_verb_resource
 
 __all__ = [
     "Ability",
@@ -19,6 +19,8 @@ __all__ = [
     "ClaimSet",
     "extract_verb_resource",
     "InvalidClaimError",
+    "InvalidClaimResourceError",
     "InvalidClaimVerbError",
     "QueryTuple",
+    "RawQuery",
 ]

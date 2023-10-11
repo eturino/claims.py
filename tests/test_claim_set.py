@@ -75,7 +75,7 @@ class TestClaimSet:  # noqa: D101
 
     def test_claims_strings(self) -> None:  # noqa: D102, D103
         actual = build_claim_set(["read:valid", "admin:*", "read:valid", "admin:*"])
-        assert actual.claims_strings == ["admin:*", "read:valid"]
+        assert actual.claims_strings() == ["admin:*", "read:valid"]
 
     def test_check_valid(self) -> None:  # noqa: D102, D103
         actual = build_claim_set(["admin:*", "read:valid", "admin:*"])
