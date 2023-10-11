@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/eturino/claims.py/compare/v0.2.2...v0.3.0) (2023-10-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* making ClaimSet#claim_strings() a method instead of a property
+
+### Features
+
+* making claim_strings() a function instead of property + support for dict in build_claim() ([c13d1cc](https://github.com/eturino/claims.py/commit/c13d1cc0d53642dcf95e6584418b0e671269bd5c))
+
 ### [0.2.2](https://github.com/eturino/claims.py/compare/v0.2.1...v0.2.2) (2023-10-10)
 
 
