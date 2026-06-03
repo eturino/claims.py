@@ -6,13 +6,16 @@ on:
             - master
             - feature/*
 
+permissions:
+    contents: read
+
 jobs:
     build:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v1
+            - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+            - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
 
             - name: CI checks
               run: |
