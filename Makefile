@@ -6,7 +6,8 @@ ifeq (, $(shell which pipenv))
 	$(error "No pipenv on PATH.")
 endif
 
-export PYTHON_VERSION=$(shell cat .python-version| tr -d "[:space:]")
+# mise.toml pins python, so take the version from the python3 it puts on PATH
+export PYTHON_VERSION=$(shell python3 -c "import platform; print(platform.python_version())")
 
 # shut up please
 export PIPENV_QUIET=1
