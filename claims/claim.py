@@ -1,4 +1,5 @@
 """Claim object."""
+
 from typing import Annotated, Any, List, Optional, Union
 
 from pydantic import BaseModel, Field

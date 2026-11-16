@@ -1,4 +1,5 @@
 """ClaimSet object, which represents a list of claims."""
+
 from typing import Any, Callable, List, Optional, Sequence, Set, Union
 
 from pydantic import BaseModel, Field, model_validator
@@ -112,7 +113,7 @@ class ClaimSet(BaseModel):
 
 
 def build_claim_set(
-    raw_list: ClaimSet | Sequence[Union[Claim, str, QueryTuple]]
+    raw_list: ClaimSet | Sequence[Union[Claim, str, QueryTuple]],
 ) -> ClaimSet:
     """Given a list of raw claims and returns a ClaimSet with the parsed claims."""
     if isinstance(raw_list, ClaimSet):

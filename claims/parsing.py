@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Utility functions."""
+
 import re
 from typing import Optional, Tuple, TypedDict, Union
 

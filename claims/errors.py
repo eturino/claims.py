@@ -1,4 +1,5 @@
 """Exception classes that can be raised when building claims."""
+
 from typing import Any
 
 
